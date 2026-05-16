@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  dyad-app:
+    image: node:20-alpine
+    container_name: dyad_builder
+    working_dir: /app
+    volumes:
+      - dyad_data:/app
+    ports:
+      - "3009:3000" # Maps the app port to your VPS port (updated to 3009 based on previous chat)
+    command: >
+      sh -c "apk add --no-cache git &&
+             git clone https://github.com/dyad-sh/dyad.git . &&
+             npm install -g pnpm &&
+             pnpm install &&
+             pnpm run build &&
+             pnpm run start"
+    restart: unless-stopped
+
+volumes:
+  dyad_data:
